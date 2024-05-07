@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To-Do Task Application</title>
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div id="menu">
+  <button onclick="showAddTask()">Add Task</button>
+  <button onclick="showDeletedTask()">Deleted Task</button>
+  <button onclick="showTaskList()">Task List</button>
+</div>
+
+<div id="addTask" class="hidden">
+  <h2>Add Task</h2>
+  <form id="taskForm">
+    <label for="taskTitle">Task Title:</label>
+    <input type="text" id="taskTitle" name="taskTitle"><br><br>
+    <label for="taskDescription">Task Description:</label><br>
+    <textarea id="taskDescription" name="taskDescription" rows="4" cols="50"></textarea><br><br>
+    <button type="button" onclick="addTask()">Add Task</button>
+  </form>
+</div>
+
+<div id="deletedTask" class="hidden">
+  <h2>Deleted Task</h2>
+  <p id="dtasks">No Task</p>
+</div>
+
+<div id="taskList" class="hidden">
+  <h2>Task List</h2>
+  <div id="taskItems">
+    <p>No Task</p>
+  </div>
+</div>
+
+<script>
+  var tasks = [];
+
+  function showAddTask() {
+    document.getElementById("addTask").classList.remove("hidden");
+    document.getElementById("deletedTask").classList.add("hidden");
+    document.getElementById("taskList").classList.add("hidden");
+  }
+
+  function showDeletedTask() {
+    document.getElementById("addTask").classList.add("hidden");
+    document.getElementById("deletedTask").classList.remove("hidden");
+    document.getElementById("taskList").classList.add("hidden");
+  }
+
+  function showTaskList() {
+    document.getElementById("addTask").classList.add("hidden");
+    document.getElementById("deletedTask").classList.add("hidden");
+    document.getElementById("taskList").classList.remove("hidden");
+  }
+
+  function addTask() {
+    var title = document.getElementById("taskTitle").value;
+    var description = document.getElementById("taskDescription").value;
+    var taskItem = {
+      title: title,
+      description: description
+    };
+    tasks.push(taskItem);
+    document.getElementById("taskTitle").value = "";
+    document.getElementById("taskDescription").value = "";
+    updateTaskList();
+  }
+
+  function updateTaskList() {
+    var taskItemsDiv = document.getElementById("taskItems");
+    taskItemsDiv.innerHTML = "";
+    if (tasks.length === 0) {
+      taskItemsDiv.innerHTML = "<p>No Task</p>";
+    } else {
+      tasks.forEach(function(task, index) {
+        var taskItem = document.createElement("div");
+        taskItem.innerHTML = "<strong>" + task.title + "</strong><br>" + task.description +
+          "<button onclick='deleteTask(" + index + ")'>Delete</button>";
+        taskItemsDiv.appendChild(taskItem);
+      });
+    }
+  }
+
+  function deleteTask(index) {
+    var deletedTask = tasks.splice(index, 1)[0];
+    var empty = document.getElementById("dtasks");
+    empty.innerHTML = " ";
+    var deletedTaskList = document.getElementById("deletedTask");
+    var deletedTaskItem = document.createElement("div");
+    deletedTaskItem.innerHTML = "<strong>" + deletedTask.title + "</strong><br>" + deletedTask.description;
+    deletedTaskList.appendChild(deletedTaskItem);
+    updateTaskList();
+  }
+</script>
+
+</body>
+</html>
